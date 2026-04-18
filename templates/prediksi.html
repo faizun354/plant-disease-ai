@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<style>
+
+.container-box{
+max-width:900px;
+margin:auto;
+margin-top:30px;
+}
+
+.card{
+border:none;
+border-radius:15px;
+box-shadow:0 5px 20px rgba(0,0,0,0.1);
+}
+
+.title{
+font-weight:600;
+color:#2c3e50;
+}
+
+.btn-predict{
+background:#2ecc71;
+border:none;
+padding:10px 25px;
+border-radius:8px;
+font-weight:500;
+color:white;
+}
+
+.btn-predict:hover{
+background:#27ae60;
+}
+
+.result-box{
+background:#ffffff;
+border-radius:15px;
+padding:25px;
+margin-top:30px;
+box-shadow:0 5px 20px rgba(0,0,0,0.08);
+}
+
+.image-box img{
+border-radius:10px;
+box-shadow:0 3px 10px rgba(0,0,0,0.1);
+}
+
+</style>
+
+<div class="container container-box">
+
+<div class="card p-4">
+
+<h3 class="text-center title mb-4">
+<i class="fa-solid fa-leaf me-2"></i>
+Deteksi Penyakit Daun Platycerium
+</h3>
+
+<form action="/predict" method="POST" enctype="multipart/form-data">
+
+<div class="mb-3">
+<label class="form-label">ID Tanaman</label>
+<input type="text" name="id_tanaman" class="form-control" required>
+</div>
+
+<div class="mb-4">
+<label class="form-label">Upload Gambar Daun</label>
+<input type="file" name="gambar" class="form-control" required>
+</div>
+
+<div class="text-center">
+<button type="submit" class="btn btn-predict">
+<i class="fa-solid fa-magnifying-glass"></i> Prediksi
+</button>
+</div>
+
+</form>
+
+</div>
+
+{% if hasil %}
+
+<div class="result-box">
+
+<h4 class="mb-3">
+<i class="fa-solid fa-flask"></i>
+Hasil Diagnosis
+</h4>
+
+<p><b>Penyakit :</b> {{hasil}}</p>
+
+<p><b>Confidence :</b> {{ (confidence*100)|round(2) }} %</p>
+
+<p><b>Penanganan :</b></p>
+<p>{{penanganan}}</p>
+
+<hr>
+
+<div class="row text-center image-box">
+
+<div class="col-md-6">
+<h5>Gambar Asli</h5>
+<img src="{{ url_for('static', filename='uploads/' + gambar) }}" width="100%">
+</div>
+
+<div class="col-md-6">
+<h5>GradCAM</h5>
+<img src="{{ url_for('static', filename='gradcam/' + gradcam) }}" width="100%">
+</div>
+
+</div>
+
+</div>
+
+{% endif %}
+
+</div>
+
+{% endblock %}

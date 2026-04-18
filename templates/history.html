@@ -1,0 +1,165 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+<h2 class="mb-3">
+<i class="fa-solid fa-clock-rotate-left me-2"></i>
+History Diagnosis Tanaman
+</h2>
+
+<!-- SEARCH -->
+<form method="GET" action="/history">
+
+<div class="input-group mb-3">
+
+<input type="text"
+name="search"
+class="form-control"
+placeholder="Cari ID Tanaman">
+
+<button class="btn btn-primary">
+<i class="fa fa-search"></i> Search
+</button>
+
+</div>
+
+</form>
+
+<!-- ACTION BUTTON -->
+<div class="mb-3 d-flex gap-2">
+
+<a href="/download_excel" class="btn btn-success">
+<i class="fa fa-download"></i> Download Excel
+</a>
+
+<a href="/delete_all"
+class="btn btn-danger"
+onclick="return confirm('Hapus semua history?')">
+
+<i class="fa fa-trash"></i> Hapus Semua
+</a>
+
+</div>
+
+<!-- TABLE -->
+
+<div class="card shadow">
+
+<div class="card-body">
+
+<table class="table table-striped table-bordered align-middle">
+
+<thead class="table-dark">
+
+<tr>
+
+<th>Waktu</th>
+<th>ID Tanaman</th>
+<th>Diagnosis</th>
+<th>Confidence</th>
+<th>Input</th>
+<th>GradCAM</th>
+<th>Aksi</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for row in data %}
+
+<tr>
+
+<td>{{ row[1] }}</td>
+<td>{{ row[2] }}</td>
+
+<td>
+<span class="badge bg-success">
+{{ row[3] }}
+</span>
+</td>
+
+<td>{{ "%.2f"|format(row[4]*100) }} %</td>
+
+<td>
+<img src="{{ url_for('static', filename=row[5]) }}"
+width="80"
+class="img-thumbnail"
+style="cursor:pointer"
+onclick="showImage(this.src)">
+</td>
+
+<td>
+<img src="{{ url_for('static', filename=row[6]) }}"
+width="80"
+class="img-thumbnail"
+style="cursor:pointer"
+onclick="showImage(this.src)">
+</td>
+
+<td>
+
+<a href="/delete_history/{{ row[0] }}"
+class="btn btn-danger btn-sm"
+onclick="return confirm('Yakin ingin menghapus data ini?')">
+
+<i class="fa fa-trash"></i> Hapus
+
+</a>
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- Modal Image Preview -->
+
+<div class="modal fade" id="imageModal" tabindex="-1">
+
+<div class="modal-dialog modal-lg">
+
+<div class="modal-content">
+
+<div class="modal-body text-center">
+
+<img id="previewImage" class="img-fluid">
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+function showImage(src){
+
+document.getElementById("previewImage").src = src;
+
+var modal = new bootstrap.Modal(
+document.getElementById('imageModal')
+);
+
+modal.show();
+
+}
+
+</script>
+
+{% endblock %}
