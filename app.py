@@ -54,11 +54,11 @@ model = load_model('model/model_platycerium_bismillah.keras')
 # ======================
 def get_db_connection():
     return mysql.connector.connect(
-        host=os.environ.get("DB_HOST"),
-        user=os.environ.get("DB_USER"),
-        password=os.environ.get("DB_PASSWORD"),
-        database=os.environ.get("DB_NAME"),
-        port=int(os.environ.get("DB_PORT", 3306))
+        host=os.environ.get("crossover.proxy.rlwy.net"),
+        user=os.environ.get("root"),
+        password=os.environ.get("FOyBTXaXIeRUcIhMJxyclhMMyYTNJToU"),
+        database=os.environ.get("railway"),
+        port=int(os.environ.get("25539", 3306))
     )
 
 # ======================
