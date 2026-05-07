@@ -47,7 +47,9 @@ mail = Mail(app)
 # ======================
 # MODEL
 # ======================
+print("LOAD MODEL...")
 model = load_model('model/model_platycerium_bismillah.keras')
+print("MODEL BERHASIL")
 
 # ======================
 # DATABASE
