@@ -47,6 +47,14 @@ border-radius:10px;
 box-shadow:0 3px 10px rgba(0,0,0,0.1);
 }
 
+.gradcam-info{
+background:#f8f9fa;
+border-left:5px solid #2ecc71;
+padding:20px;
+margin-top:25px;
+border-radius:10px;
+}
+
 </style>
 
 <div class="container container-box">
@@ -109,6 +117,42 @@ Hasil Diagnosis
 <h5>GradCAM</h5>
 <img src="{{ url_for('static', filename='gradcam/' + gradcam) }}" width="100%">
 </div>
+
+</div>
+
+<!-- 🔥 PENJELASAN GRADCAM -->
+<div class="gradcam-info">
+
+<h5><i class="fa-solid fa-eye"></i> Interpretasi Grad-CAM</h5>
+
+<p>
+Grad-CAM digunakan untuk menampilkan area pada gambar yang paling berpengaruh
+terhadap keputusan model dalam melakukan klasifikasi penyakit.
+</p>
+
+<p>
+<b>Arti warna pada visualisasi:</b>
+</p>
+
+<ul>
+<li><b style="color:red;">Merah</b> → Area paling berpengaruh (fokus utama model)</li>
+<li><b style="color:orange;">Kuning</b> → Area cukup berpengaruh</li>
+<li><b style="color:green;">Hijau</b> → Pengaruh rendah</li>
+<li><b style="color:blue;">Biru</b> → Tidak berpengaruh</li>
+</ul>
+
+<p>
+Pada hasil di atas, area berwarna merah dan kuning menunjukkan bagian daun
+yang teridentifikasi sebagai gejala utama penyakit. Hal ini menunjukkan bahwa
+model CNN mampu memfokuskan perhatian pada area yang relevan dalam proses
+klasifikasi.
+</p>
+
+<p>
+Dengan demikian, penggunaan Grad-CAM tidak hanya meningkatkan kepercayaan terhadap
+hasil prediksi, tetapi juga memberikan penjelasan visual (explainable AI)
+mengenai bagaimana model bekerja.
+</p>
 
 </div>
 

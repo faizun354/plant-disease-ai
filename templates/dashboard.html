@@ -33,9 +33,11 @@
 <i class="fa-solid fa-virus"></i>
 </div>
 
-<div class="stat-title">Penyakit Terdeteksi</div>
+<div class="stat-title">Jumlah Tanaman Tidak Sehat</div>
 
-<div class="stat-number">5</div>
+<div class="stat-number">
+{{ total_tidak_sehat }}
+</div>
 
 </div>
 </div>
@@ -47,9 +49,11 @@
 <i class="fa-solid fa-bullseye"></i>
 </div>
 
-<div class="stat-title">Akurasi Model</div>
+<div class="stat-title">Rata-rata Confidence</div>
 
-<div class="stat-number">91%</div>
+<div class="stat-number">
+{{ (avg_confidence * 100) | round(2) }} %
+</div>
 
 </div>
 </div>

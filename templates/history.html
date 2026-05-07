@@ -9,7 +9,7 @@
 History Diagnosis Tanaman
 </h2>
 
-<!-- SEARCH -->
+<!-- 🔍 SEARCH -->
 <form method="GET" action="/history">
 
 <div class="input-group mb-3">
@@ -17,12 +17,54 @@ History Diagnosis Tanaman
 <input type="text"
 name="search"
 class="form-control"
-placeholder="Cari ID Tanaman">
+placeholder="Cari ID Tanaman"
+value="{{ keyword if keyword else '' }}">
 
 <button class="btn btn-primary">
 <i class="fa fa-search"></i> Search
 </button>
 
+</div>
+
+</form>
+
+<!-- 🔥 FILTER BARU -->
+<form method="GET" action="/history" class="row g-2 mb-3">
+
+<!-- 🔁 Biar search tetap kebawa -->
+<input type="hidden" name="search" value="{{ keyword }}">
+
+<div class="col-md-3">
+<label>Tanggal Mulai</label>
+<input type="date" name="start_date" class="form-control"
+value="{{ start_date }}">
+</div>
+
+<div class="col-md-3">
+<label>Tanggal Akhir</label>
+<input type="date" name="end_date" class="form-control"
+value="{{ end_date }}">
+</div>
+
+<div class="col-md-3">
+<label>Diagnosis</label>
+<select name="diagnosis" class="form-control">
+
+<option value="">Semua</option>
+
+<option value="bercak_coklat" {% if diagnosis_filter=='bercak_coklat' %}selected{% endif %}>Bercak Coklat</option>
+<option value="bercak_putih" {% if diagnosis_filter=='bercak_putih' %}selected{% endif %}>Bercak Putih</option>
+<option value="busuk_akar" {% if diagnosis_filter=='busuk_akar' %}selected{% endif %}>Busuk Akar</option>
+<option value="sunburn" {% if diagnosis_filter=='sunburn' %}selected{% endif %}>Sunburn</option>
+<option value="sehat" {% if diagnosis_filter=='sehat' %}selected{% endif %}>Sehat</option>
+
+</select>
+</div>
+
+<div class="col-md-3 d-flex align-items-end">
+<button class="btn btn-primary w-100">
+<i class="fa fa-filter"></i> Filter
+</button>
 </div>
 
 </form>
@@ -44,27 +86,22 @@ onclick="return confirm('Hapus semua history?')">
 </div>
 
 <!-- TABLE -->
-
 <div class="card shadow">
-
 <div class="card-body">
 
 <table class="table table-striped table-bordered align-middle">
 
 <thead class="table-dark">
-
 <tr>
-
 <th>Waktu</th>
 <th>ID Tanaman</th>
 <th>Diagnosis</th>
 <th>Confidence</th>
+<th>Penanganan</th>
 <th>Input</th>
 <th>GradCAM</th>
 <th>Aksi</th>
-
 </tr>
-
 </thead>
 
 <tbody>
@@ -74,7 +111,15 @@ onclick="return confirm('Hapus semua history?')">
 <tr>
 
 <td>{{ row[1] }}</td>
-<td>{{ row[2] }}</td>
+
+<td>
+<span id="text-{{ row[0] }}">{{ row[2] }}</span>
+<input type="text"
+id="input-{{ row[0] }}"
+value="{{ row[2] }}"
+class="form-control form-control-sm"
+style="display:none;">
+</td>
 
 <td>
 <span class="badge bg-success">
@@ -83,6 +128,10 @@ onclick="return confirm('Hapus semua history?')">
 </td>
 
 <td>{{ "%.2f"|format(row[4]*100) }} %</td>
+
+<td style="max-width:220px;">
+{{ row[7] if row|length > 7 else '-' }}
+</td>
 
 <td>
 <img src="{{ url_for('static', filename=row[5]) }}"
@@ -102,12 +151,23 @@ onclick="showImage(this.src)">
 
 <td>
 
+<button class="btn btn-warning btn-sm mb-1"
+onclick="editRow({{ row[0] }})"
+id="edit-btn-{{ row[0] }}">
+<i class="fa fa-pen"></i>
+</button>
+
+<button class="btn btn-success btn-sm mb-1"
+onclick="saveRow({{ row[0] }})"
+style="display:none;"
+id="save-btn-{{ row[0] }}">
+<i class="fa fa-check"></i>
+</button>
+
 <a href="/delete_history/{{ row[0] }}"
 class="btn btn-danger btn-sm"
 onclick="return confirm('Yakin ingin menghapus data ini?')">
-
-<i class="fa fa-trash"></i> Hapus
-
+<i class="fa fa-trash"></i>
 </a>
 
 </td>
@@ -121,42 +181,109 @@ onclick="return confirm('Yakin ingin menghapus data ini?')">
 </table>
 
 </div>
+</div>
+
+<!-- 🔥 PAGINATION (SUDAH SUPPORT FILTER) -->
+<div class="d-flex justify-content-center mt-4">
+
+<ul class="pagination">
+
+{% if page > 1 %}
+<li class="page-item">
+<a class="page-link"
+href="?page={{ page-1 }}
+{% if keyword %}&search={{ keyword }}{% endif %}
+{% if start_date %}&start_date={{ start_date }}{% endif %}
+{% if end_date %}&end_date={{ end_date }}{% endif %}
+{% if diagnosis_filter %}&diagnosis={{ diagnosis_filter }}{% endif %}">
+Previous
+</a>
+</li>
+{% endif %}
+
+{% for p in range(1, total_pages + 1) %}
+<li class="page-item {% if p == page %}active{% endif %}">
+<a class="page-link"
+href="?page={{ p }}
+{% if keyword %}&search={{ keyword }}{% endif %}
+{% if start_date %}&start_date={{ start_date }}{% endif %}
+{% if end_date %}&end_date={{ end_date }}{% endif %}
+{% if diagnosis_filter %}&diagnosis={{ diagnosis_filter }}{% endif %}">
+{{ p }}
+</a>
+</li>
+{% endfor %}
+
+{% if page < total_pages %}
+<li class="page-item">
+<a class="page-link"
+href="?page={{ page+1 }}
+{% if keyword %}&search={{ keyword }}{% endif %}
+{% if start_date %}&start_date={{ start_date }}{% endif %}
+{% if end_date %}&end_date={{ end_date }}{% endif %}
+{% if diagnosis_filter %}&diagnosis={{ diagnosis_filter }}{% endif %}">
+Next
+</a>
+</li>
+{% endif %}
+
+</ul>
 
 </div>
 
 </div>
 
-<!-- Modal Image Preview -->
-
+<!-- MODAL -->
 <div class="modal fade" id="imageModal" tabindex="-1">
-
 <div class="modal-dialog modal-lg">
-
 <div class="modal-content">
-
 <div class="modal-body text-center">
-
 <img id="previewImage" class="img-fluid">
-
 </div>
-
 </div>
-
 </div>
-
 </div>
 
 <script>
 
 function showImage(src){
-
 document.getElementById("previewImage").src = src;
-
-var modal = new bootstrap.Modal(
-document.getElementById('imageModal')
-);
-
+var modal = new bootstrap.Modal(document.getElementById('imageModal'));
 modal.show();
+}
+
+function editRow(id){
+document.getElementById("text-"+id).style.display = "none";
+document.getElementById("input-"+id).style.display = "block";
+document.getElementById("edit-btn-"+id).style.display = "none";
+document.getElementById("save-btn-"+id).style.display = "inline-block";
+}
+
+function saveRow(id){
+
+let newValue = document.getElementById("input-"+id).value;
+
+fetch('/update_id', {
+method: 'POST',
+headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+body: `id_history=${id}&id_tanaman=${newValue}`
+})
+.then(response => response.json())
+.then(data => {
+
+if(data.status === "success"){
+document.getElementById("text-"+id).innerText = newValue;
+
+document.getElementById("text-"+id).style.display = "block";
+document.getElementById("input-"+id).style.display = "none";
+
+document.getElementById("edit-btn-"+id).style.display = "inline-block";
+document.getElementById("save-btn-"+id).style.display = "none";
+} else {
+alert("Gagal update!");
+}
+
+});
 
 }
 

@@ -12,32 +12,52 @@
 <style>
 
 /* GLOBAL */
-
 body{
 background:#f3f8f4;
 font-family:'Segoe UI',sans-serif;
 }
 
 /* SIDEBAR */
-
 .sidebar{
 height:100vh;
 width:240px;
 position:fixed;
 background:linear-gradient(180deg,#2ecc71,#27ae60);
 color:white;
-padding-top:30px;
+padding-top:20px;
 box-shadow:3px 0 15px rgba(0,0,0,0.1);
 }
 
-.sidebar h4{
+/* 🔥 LOGO */
+.sidebar-logo{
+width:70px;
+border-radius:12px;
+box-shadow:0 4px 10px rgba(0,0,0,0.25);
+transition:0.3s;
+}
+
+.sidebar-logo:hover{
+transform:scale(1.05);
+}
+
+/* HEADER SIDEBAR */
+.sidebar-header{
+text-align:center;
+margin-bottom:20px;
+}
+
+.sidebar-header h5{
+margin-top:10px;
+margin-bottom:0;
 font-weight:600;
-margin-bottom:30px;
-letter-spacing:1px;
+}
+
+.sidebar-header small{
+font-size:12px;
+opacity:0.9;
 }
 
 /* MENU */
-
 .sidebar a{
 color:white;
 display:block;
@@ -56,14 +76,12 @@ transform:translateX(3px);
 }
 
 /* MAIN CONTENT */
-
 .main{
 margin-left:240px;
 padding:35px;
 }
 
 /* PAGE TITLE */
-
 .page-title{
 font-weight:600;
 color:#2c3e50;
@@ -71,7 +89,6 @@ margin-bottom:20px;
 }
 
 /* CARD */
-
 .card{
 border:none;
 border-radius:15px;
@@ -85,7 +102,6 @@ box-shadow:0 12px 25px rgba(0,0,0,0.12);
 }
 
 /* DASHBOARD STAT CARD */
-
 .card-stat{
 border:none;
 border-radius:15px;
@@ -101,7 +117,6 @@ box-shadow:0 12px 25px rgba(0,0,0,0.12);
 }
 
 /* STAT ICON */
-
 .stat-icon{
 font-size:28px;
 margin-bottom:10px;
@@ -109,7 +124,6 @@ color:#27ae60;
 }
 
 /* STAT NUMBER */
-
 .stat-number{
 font-size:30px;
 font-weight:600;
@@ -117,13 +131,11 @@ color:#2c3e50;
 }
 
 /* STAT TITLE */
-
 .stat-title{
 color:#6b7280;
 }
 
 /* TABLE */
-
 .table{
 border-radius:10px;
 overflow:hidden;
@@ -135,7 +147,6 @@ color:white;
 }
 
 /* BUTTON */
-
 .btn-success{
 background:#27ae60;
 border:none;
@@ -146,7 +157,6 @@ background:#219150;
 }
 
 /* IMAGE */
-
 .img-thumbnail{
 border-radius:10px;
 transition:0.25s;
@@ -157,7 +167,6 @@ transform:scale(1.05);
 }
 
 /* RESULT BOX */
-
 .result-box{
 background:white;
 border-radius:15px;
@@ -166,6 +175,7 @@ margin-top:25px;
 box-shadow:0 8px 20px rgba(0,0,0,0.08);
 }
 
+/* LOGOUT */
 .logout-btn{
 color:#ffdddd;
 }
@@ -174,6 +184,7 @@ color:#ffdddd;
 background:#e74c3c !important;
 color:white !important;
 }
+
 </style>
 
 {% block extra_head %}{% endblock %}
@@ -183,13 +194,22 @@ color:white !important;
 <body>
 
 <!-- SIDEBAR -->
-
 <div class="sidebar">
 
-<h4 class="text-center">
-🌿 Platycerium AI
-</h4>
+<!-- 🔥 HEADER (LOGO + TITLE) -->
+<div class="sidebar-header">
 
+<img src="{{ url_for('static', filename='images/logo.png') }}" 
+     alt="Logo"
+     class="sidebar-logo">
+
+<h5>PlatyScan AI</h5>
+
+</div>
+
+<hr class="text-light mx-3">
+
+<!-- MENU -->
 <a href="/dashboard">
 <i class="fa-solid fa-chart-line me-2"></i> Dashboard
 </a>
@@ -199,24 +219,24 @@ color:white !important;
 </a>
 
 <a href="/history">
-<i class="fa-solid fa-clock-rotate-left me-2"></i> History
+<i class="fa-solid fa-clock-rotate-left me-2"></i> Riwayat
 </a>
 
 <a href="/help">
-<i class="fa-solid fa-circle-question me-2"></i> Help
+<i class="fa-solid fa-circle-question me-2"></i> Bantuan
 </a>
 
 <a href="/jurnal">
-<i class="fa-solid fa-book me-2"></i> Jurnal Pendukung
+<i class="fa-solid fa-book me-2"></i> Referensi
 </a>
+
 <a href="/logout" class="logout-btn">
-<i class="fa-solid fa-right-from-bracket me-2"></i> Logout
+<i class="fa-solid fa-right-from-bracket me-2"></i> Keluar
 </a>
 
 </div>
 
 <!-- MAIN CONTENT -->
-
 <div class="main">
 
 {% block content %}
